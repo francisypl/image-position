@@ -107,7 +107,24 @@ const close = (
   </svg>
 );
 
-const ICON_MAP = { crop, square, horizontal, vertical, freeform, close };
+const image = (
+  <svg
+    width="19"
+    height="15"
+    viewBox="0 0 19 15"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M0 0V14.6667H18.3333V0H0ZM1.66669 1.46667H16.6667V8.74133L13.2084 6.30667L9.38335 10.5087L6.55002 8.514L2.10835 13.2H1.66669V1.46667ZM4.28333 13.2L6.79166 10.5527L9.64999 12.562L13.475 8.36L16.6667 10.6187V13.2H4.28333ZM3.33331 4.4C3.33331 3.59333 4.08331 2.93333 4.99998 2.93333C5.91665 2.93333 6.66665 3.59333 6.66665 4.4C6.66665 5.20666 5.91665 5.86666 4.99998 5.86666C4.08331 5.86666 3.33331 5.20666 3.33331 4.4Z"
+      fill="white"
+    />
+  </svg>
+);
+
+const ICON_MAP = { crop, square, horizontal, vertical, freeform, close, image };
 
 export function Icon({ name, className, children, ...props }) {
   return (

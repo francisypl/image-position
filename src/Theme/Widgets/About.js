@@ -8,7 +8,7 @@ import {
   Flex,
   Container,
   Grid,
-  EditableImage,
+  ImageContainer,
   Button
 } from "../Elements";
 import Widget from "./Widget";
@@ -26,7 +26,7 @@ export default function About(props) {
           <Grid gridTemplateColumns="1fr 1fr 1fr" gridGap="2em">
             {data.map(({ id, img }, i) => (
               <Flex key={i} flexDirection="column" justifyContent="center">
-                <EditableImage
+                <ImageContainer
                   id={id}
                   editing={i === 0}
                   treatment="cover"

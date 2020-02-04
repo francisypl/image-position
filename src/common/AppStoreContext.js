@@ -1,6 +1,7 @@
 import React, { createContext, useReducer } from "react";
 import { get } from "lodash";
 import uuid from "uuid/v4";
+import * as containerStyles from "../constants/containerStyles";
 
 // actions
 export const SET_MODAL_ACTION = "SET_MODAL_ACTION";
@@ -34,15 +35,18 @@ const initialState = {
       cards: [
         {
           id: uuid(),
-          img: "https://img1.wsimg.com/isteam/stock/1036/:/rs=w:600,cg:true,m"
+          img: "https://img1.wsimg.com/isteam/stock/1036/:/rs=w:600,cg:true,m",
+          containerStyle: containerStyles.square
         },
         {
           id: uuid(),
-          img: "//img1.wsimg.com/isteam/stock/105588/:/rs=w:600,cg:true,m"
+          img: "//img1.wsimg.com/isteam/stock/105588/:/rs=w:600,cg:true,m",
+          containerStyle: containerStyles.square
         },
         {
           id: uuid(),
-          img: "https://img1.wsimg.com/isteam/stock/1051/:/rs=w:600,cg:true,m"
+          img: "https://img1.wsimg.com/isteam/stock/1051/:/rs=w:600,cg:true,m",
+          containerStyle: containerStyles.square
         }
       ]
     }
