@@ -3,7 +3,7 @@ import ImageEditor from "./Editor";
 import EditorState from "./EditorState";
 import AppStoreContext, {
   UNSET_MODAL_ACTION,
-  setAboutImage
+  setAboutProperty
 } from "../../common/AppStoreContext";
 
 export default class EditorView extends Component {
@@ -98,7 +98,10 @@ export default class EditorView extends Component {
   saveImage = () => {
     if (this.editor && this.editor.current) {
       const img = this.editor.current.getImageData();
-      setAboutImage(this.appState, this.dispatch)(img, this.props.id);
+      setAboutProperty(this.appState, this.dispatch)({
+        img,
+        id: this.props.id
+      });
       this.dispatch({ type: UNSET_MODAL_ACTION });
     }
   };

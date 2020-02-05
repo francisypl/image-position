@@ -8,14 +8,14 @@ export const SET_MODAL_ACTION = "SET_MODAL_ACTION";
 export const UNSET_MODAL_ACTION = "UNSET_MODAL_ACTION";
 export const SET_ABOUT_CARDS = "SET_ABOUT_CARDS";
 
-export function setAboutImage(state, dispatch) {
-  return (img, id) => {
+export function setAboutProperty(state, dispatch) {
+  return image => {
     const aboutCards = getAboutCards(state);
     dispatch({
       type: SET_ABOUT_CARDS,
       payload: aboutCards.map(card => {
-        if (card.id === id) {
-          return { id, img };
+        if (card.id === image.id) {
+          return { ...card, ...image };
         }
         return card;
       })

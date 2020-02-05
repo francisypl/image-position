@@ -24,14 +24,13 @@ export default function About(props) {
       <Section bg="pageBackground" py={80} px={20}>
         <Container>
           <Grid gridTemplateColumns="1fr 1fr 1fr" gridGap="2em">
-            {data.map(({ id, img }, i) => (
+            {data.map(({ id, img, containerStyle }, i) => (
               <Flex key={i} flexDirection="column" justifyContent="center">
                 <ImageContainer
                   id={id}
                   editing={i === 0}
-                  treatment="cover"
-                  height={200}
                   src={img}
+                  containerStyle={containerStyle}
                 />
                 <Heading level={4} textStyle="h4" mt={24} mb={24}>
                   Sub Heading
