@@ -1,10 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useTheme } from "../";
 import { ThemeProvider, theme } from "../";
 import ColorPickerCategory from "../../Editor/Color/ColorPickerCategory";
 import { getColorPalette, generatePalette } from "../themes/getColorPalette";
 import Layer from "../../Editor/Layer";
 import Align from "../../Editor/Align";
+import ImageToolbar from "../../Editor/ImageEditor/Toolbar";
+import AppStoreContext, {
+  setAboutProperty
+} from "../../common/AppStoreContext";
 
 const icon = (
   <svg width={16} height={16}>
@@ -28,9 +32,12 @@ const icon = (
 export default function Widget({ color, overlay = false, index, children }) {
   const [colorOverride, setColorOverride] = useState(color);
 
-  const [showPicker, setShowPicker] = useState(false);
+  const [showPicker, setShowPicker] = useState(true);
   const [ref, setRef] = useState(null);
   const { colors, scheme } = useTheme();
+
+  const { state, dispatch } = useContext(AppStoreContext);
+  const setCard = setAboutProperty(state, dispatch);
 
   const newTheme = theme({
     color: colors.primary,
@@ -54,27 +61,27 @@ export default function Widget({ color, overlay = false, index, children }) {
   }, []);
 
   const show = showPicker && !overlay;
-  const picker = show ? (
-    <Layer>
-      <Align index={index} node={ref}>
-        <div className="accent-picker">
-          <div className="flex-center peak">
-            <span className="accent-icon">{icon}</span>
-            <span>Accent:</span>
-          </div>
 
-          <ColorPickerCategory
-            colors={getColorPalette(colors.primary, colors.secondary)}
-            setColor={setColorOverride}
-          />
-        </div>
-      </Align>
-    </Layer>
+  const toolbar = show ? (
+    <ImageToolbar
+      items={["container"]}
+      onContainerChange={newStyle => setCard({ containerStyle: newStyle })}
+      isWidgetLevel
+    />
   ) : null;
 
   return (
-    <div ref={onRefSet} className="widget">
-      {picker}
+    <div
+      ref={onRefSet}
+      className="widget"
+      onMouseOver={() => setShowPicker(true)}
+      onMouseLeave={() => setShowPicker(false)}
+    >
+      <Layer>
+        <Align index={index} node={ref}>
+          {toolbar}
+        </Align>
+      </Layer>
       <ThemeProvider theme={newTheme}>{children}</ThemeProvider>
     </div>
   );

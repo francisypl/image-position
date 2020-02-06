@@ -15,11 +15,13 @@ const cropIcons = [
 const containerIcons = [
   { name: containerStyles.square, label: "Square" },
   { name: containerStyles.horizontal, label: "Horizontal" },
-  { name: containerStyles.vertical, label: "Vertical" }
+  { name: containerStyles.vertical, label: "Vertical" },
+  { name: containerStyles.resize, label: "Resize" }
 ];
 
 export default function Toolbar({
   items,
+  isWidgetLevel,
   onStartCrop,
   onContainerChange,
   onMoveClick,
@@ -42,12 +44,14 @@ export default function Toolbar({
     container: (
       <ToolbarIcon name="image">
         <List className="toolbar-list">
-          {containerIcons.map(icon => (
-            <ListItem onClick={() => void onContainerChange(icon.name)}>
-              <Icon name={icon.name} />
-              <span>{icon.label}</span>
-            </ListItem>
-          ))}
+          {containerIcons.map(icon =>
+            isWidgetLevel && icon.name === containerStyles.resize ? null : (
+              <ListItem onClick={() => void onContainerChange(icon.name)}>
+                <Icon name={icon.name} />
+                <span>{icon.label}</span>
+              </ListItem>
+            )
+          )}
         </List>
       </ToolbarIcon>
     ),

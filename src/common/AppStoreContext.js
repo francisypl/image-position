@@ -21,6 +21,8 @@ export function setAboutProperty(state, dispatch) {
             delete image.pos;
           }
           return { ...card, ...image };
+        } else if (!image.id) {
+          return { ...card, ...image };
         }
         return card;
       })
@@ -41,12 +43,12 @@ const initialState = {
         {
           id: uuid(),
           img: "https://img1.wsimg.com/isteam/stock/1036/:/rs=w:600,cg:true,m",
-          containerStyle: containerStyles.square
+          containerStyle: containerStyles.vertical
         },
         {
           id: uuid(),
           img: "//img1.wsimg.com/isteam/stock/105588/:/rs=w:600,cg:true,m",
-          containerStyle: containerStyles.horizontal
+          containerStyle: containerStyles.vertical
         },
         {
           id: uuid(),

@@ -31,7 +31,7 @@ function getPosition(e) {
   return { x: e.clientX, y: e.clientY };
 }
 
-function getHorizontalImgStyles({ width, height } = {}) {
+function getHorizontalImgStyles() {
   const defaults = getDefaultImgStyles(...arguments);
   return merge(defaults, {
     crop: {
@@ -134,22 +134,21 @@ export function ImageContainer({ id, containerStyle, style, pos, ...props }) {
   const imageToolbar = showToolbar ? (
     <Layer>
       <Align node={ref} offset={{ top: 47, left: -10 }}>
-        {isViewState && (
-          <ImageToolbar
-            items={["container", "move"]}
-            onContainerChange={newStyle =>
-              setCard({ id, containerStyle: newStyle })
-            }
-            onMoveClick={() => setEditState(EDIT_STATES.move)}
-          />
-        )}
-        {isMoveState && (
-          <ImageToolbar
-            items={["save", "exit"]}
-            onSave={saveMove}
-            onExit={exitMove}
-          />
-        )}
+        <ImageToolbar
+          items={
+            isViewState
+              ? ["move", "container"]
+              : isMoveState
+              ? ["save", "exit"]
+              : []
+          }
+          onContainerChange={newStyle =>
+            setCard({ id, containerStyle: newStyle })
+          }
+          onMoveClick={() => setEditState(EDIT_STATES.move)}
+          onSave={saveMove}
+          onExit={exitMove}
+        />
       </Align>
     </Layer>
   ) : null;
