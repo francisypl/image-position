@@ -29,10 +29,16 @@ const icon = (
   </svg>
 );
 
-export default function Widget({ color, overlay = false, index, children }) {
+export default function Widget({
+  color,
+  overlay = false,
+  index,
+  showToolbar,
+  children
+}) {
   const [colorOverride, setColorOverride] = useState(color);
 
-  const [showPicker, setShowPicker] = useState(true);
+  const [showPicker, setShowPicker] = useState(false);
   const [ref, setRef] = useState(null);
   const { colors, scheme } = useTheme();
 
@@ -62,13 +68,14 @@ export default function Widget({ color, overlay = false, index, children }) {
 
   const show = showPicker && !overlay;
 
-  const toolbar = show ? (
-    <ImageToolbar
-      items={["container"]}
-      onContainerChange={newStyle => setCard({ containerStyle: newStyle })}
-      isWidgetLevel
-    />
-  ) : null;
+  const toolbar =
+    show && showToolbar ? (
+      <ImageToolbar
+        items={["container"]}
+        onContainerChange={newStyle => setCard({ containerStyle: newStyle })}
+        isWidgetLevel
+      />
+    ) : null;
 
   return (
     <div
