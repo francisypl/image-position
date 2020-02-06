@@ -31,37 +31,42 @@ function getPosition(e) {
   return { x: e.clientX, y: e.clientY };
 }
 
-function getHorizontalImgStyles() {
-  return {};
-}
-
-function getVerticalImgStyles() {
-  return {};
-}
-
-function getSquareImgStyles({ width, height } = {}, position = {}) {
+function getHorizontalImgStyles({ width, height } = {}) {
   const defaults = getDefaultImgStyles(...arguments);
-  const CONTAINER_LEN = 250;
-  const MAX_WIDTH = width - CONTAINER_LEN;
-  const MAX_HEIGHT = height - CONTAINER_LEN;
-  const top = Math.min(Math.max(MAX_HEIGHT * -1, position.top), 0);
-  const left = Math.min(Math.max(MAX_WIDTH * -1, position.left), 0);
   return merge(defaults, {
     crop: {
-      width: CONTAINER_LEN,
-      height: CONTAINER_LEN
-    },
-    container: {
-      transform: `translate(${Math.min(0, left)}px, ${Math.min(0, top)}px)`
+      width: "100%",
+      paddingTop: "56.25%"
     }
   });
 }
 
-function getDefaultImgStyles({ width, height } = {}) {
+function getVerticalImgStyles() {
+  const defaults = getDefaultImgStyles(...arguments);
+  return merge(defaults, {
+    crop: {
+      width: "100%",
+      paddingTop: "150%"
+    }
+  });
+}
+
+function getSquareImgStyles() {
+  const defaults = getDefaultImgStyles(...arguments);
+  return merge(defaults, {
+    crop: {
+      width: "100%",
+      paddingTop: "100%"
+    }
+  });
+}
+
+function getDefaultImgStyles({ width, height } = {}, { left, top } = {}) {
   return {
     container: {
       width,
-      height
+      height,
+      transform: `translate(${left}px, ${top}px)`
     }
   };
 }
@@ -85,41 +90,27 @@ export function ImageContainer({ id, containerStyle, style, pos, ...props }) {
   const [editState, setEditState] = useState(EDIT_STATES.view);
   const [ref, setRef] = useState();
   const [position, setPosition] = useState(pos || DEFAULT_POSITION);
+  const [containerDimension, setContainerDimension] = useState();
+
   const { state, dispatch } = useContext(AppStoreContext);
-  const setContainerStyle = setAboutProperty(state, dispatch);
+  const setCard = setAboutProperty(state, dispatch);
   const initPos = useRef();
+  const isViewState = editState === EDIT_STATES.view;
+  const isMoveState = editState === EDIT_STATES.move;
 
   const saveRef = useCallback(ref => {
     setRef(ref);
   }, []);
 
-  const showToolbar = showEditOption;
-  const imageToolbar = showToolbar ? (
-    <Layer>
-      <Align node={ref} offset={{ top: 47, left: -10 }}>
-        {editState === EDIT_STATES.view && (
-          <ImageToolbar
-            items={["container", "move"]}
-            onContainerChange={newStyle =>
-              setContainerStyle({ id, containerStyle: newStyle })
-            }
-            onMoveClick={() => setEditState(EDIT_STATES.move)}
-          />
-        )}
-        {editState === EDIT_STATES.move && (
-          <ImageToolbar items={["save", "exit"]} />
-        )}
-      </Align>
-    </Layer>
-  ) : null;
+  function exitMove() {
+    setEditState(EDIT_STATES.view);
+    setPosition(pos || DEFAULT_POSITION);
+  }
 
-  useEffect(() => {
-    const image = new window.Image();
-    image.onload = function() {
-      setImg({ width: image.width, height: image.height });
-    };
-    image.src = props.src;
-  }, [props.src]);
+  function saveMove() {
+    setEditState(EDIT_STATES.view);
+    setCard({ id, pos: position });
+  }
 
   function handleMouseMove(e) {
     const mousePosition = getPosition(e);
@@ -128,31 +119,83 @@ export function ImageContainer({ id, containerStyle, style, pos, ...props }) {
         x: initPos.current.x - mousePosition.x,
         y: initPos.current.y - mousePosition.y
       };
-      setPosition({
-        top: position.top - delta.y,
-        left: position.left - delta.x
-      });
+      const maxWidth = img.width - containerDimension.width;
+      const maxHeight = img.height - containerDimension.height;
+      const top = Math.min(Math.max(maxHeight * -1, position.top - delta.y), 0);
+      const left = Math.min(
+        Math.max(maxWidth * -1, position.left - delta.x),
+        0
+      );
+      setPosition({ top, left });
     }
   }
+
+  const showToolbar = showEditOption;
+  const imageToolbar = showToolbar ? (
+    <Layer>
+      <Align node={ref} offset={{ top: 47, left: -10 }}>
+        {isViewState && (
+          <ImageToolbar
+            items={["container", "move"]}
+            onContainerChange={newStyle =>
+              setCard({ id, containerStyle: newStyle })
+            }
+            onMoveClick={() => setEditState(EDIT_STATES.move)}
+          />
+        )}
+        {isMoveState && (
+          <ImageToolbar
+            items={["save", "exit"]}
+            onSave={saveMove}
+            onExit={exitMove}
+          />
+        )}
+      </Align>
+    </Layer>
+  ) : null;
+
+  // get the original image's dimensions
+  useEffect(() => {
+    const image = new window.Image();
+    image.onload = function() {
+      setImg({ width: image.width, height: image.height });
+    };
+    image.src = props.src;
+  }, [props.src]);
+
+  // get the container's dimensions
+  useEffect(() => {
+    if (ref) {
+      setContainerDimension(ref.getBoundingClientRect());
+    }
+  }, [containerStyle, ref]);
+
+  useEffect(() => {
+    setPosition(pos || DEFAULT_POSITION);
+  }, [pos]);
 
   const styles = getStyles(containerStyle, img, position);
 
   return (
     <div
       className={cx("crop-img-container", {
-        move: editState === EDIT_STATES.move
+        move: isMoveState
       })}
       ref={saveRef}
       style={styles.crop}
       onMouseOver={() => setShowEditOption(true)}
       onMouseLeave={() => setShowEditOption(false)}
       onMouseDown={e => {
-        ref.addEventListener("mousemove", handleMouseMove);
-        initPos.current = getPosition(e);
+        if (isMoveState) {
+          ref.addEventListener("mousemove", handleMouseMove);
+          initPos.current = getPosition(e);
+        }
       }}
       onMouseUp={() => {
-        ref.removeEventListener("mousemove", handleMouseMove);
-        initPos.current = null;
+        if (isMoveState) {
+          ref.removeEventListener("mousemove", handleMouseMove);
+          initPos.current = null;
+        }
       }}
     >
       {imageToolbar}

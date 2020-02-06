@@ -15,6 +15,11 @@ export function setAboutProperty(state, dispatch) {
       type: SET_ABOUT_CARDS,
       payload: aboutCards.map(card => {
         if (card.id === image.id) {
+          const containerStyle = image.containerStyle || card.containerStyle;
+          if (image.pos) {
+            card.pos = { ...card.pos, [containerStyle]: image.pos };
+            delete image.pos;
+          }
           return { ...card, ...image };
         }
         return card;
@@ -41,12 +46,12 @@ const initialState = {
         {
           id: uuid(),
           img: "//img1.wsimg.com/isteam/stock/105588/:/rs=w:600,cg:true,m",
-          containerStyle: containerStyles.square
+          containerStyle: containerStyles.horizontal
         },
         {
           id: uuid(),
           img: "https://img1.wsimg.com/isteam/stock/1051/:/rs=w:600,cg:true,m",
-          containerStyle: containerStyles.square
+          containerStyle: containerStyles.vertical
         }
       ]
     }

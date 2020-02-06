@@ -506,6 +506,8 @@ aside {
 }
 
 .full-img-container {
+  position: absolute;
+  top: 0px;
   img{
     display: block;
     width: 100%;
