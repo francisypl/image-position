@@ -20,7 +20,7 @@ export default function About(props) {
   const { state } = useContext(AppStoreContext);
   const data = getAboutCards(state);
   return (
-    <Widget {...props}>
+    <Widget showToolbar {...props}>
       <Section bg="pageBackground" py={80} px={20}>
         <Container>
           <Grid
