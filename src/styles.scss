@@ -519,3 +519,55 @@ aside {
     -ms-user-select: none;
   }
 }
+
+.slider-container {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  bottom: 5px;
+  padding-top: 25px;
+  width: 180px;
+  background-color: rgba(0,0,0,0.4);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.slider-handle {
+  width: 13px;
+  height: 13px;
+  background-color: #fff;
+  border-radius: 12px;
+  position: absolute;
+  top: 7px;
+  left: 25px;
+  cursor: grab;
+  &.active {
+    cursor: grabbing;
+  }
+}
+
+.slider-bar {
+  height: 2px;
+  position: absolute;
+  width: 65%;
+  background-color: rgba(255,255,255,0.5);
+  left: 0px;
+  right: 0px;
+  margin-right: auto;
+  margin-left: auto;
+  top: 50%;
+}
+
+.slider-zoom-in {
+  position: absolute;
+  right: 5px;
+  top: 2px;
+  margin: unset;
+}
+
+.slider-zoom-out {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  margin: unset;
+}
