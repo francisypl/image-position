@@ -16,6 +16,7 @@ import Layer from "../../Editor/Layer";
 import AppStoreContext, {
   setAboutProperty
 } from "../../common/AppStoreContext";
+import { Slider } from "./Slider";
 
 const DEFAULT_POSITION = {
   top: 0,
@@ -176,32 +177,35 @@ export function ImageContainer({ id, containerStyle, style, pos, ...props }) {
   const styles = getStyles(containerStyle, img, position);
 
   return (
-    <div
-      className={cx("crop-img-container", {
-        move: isMoveState
-      })}
-      ref={saveRef}
-      style={styles.crop}
-      onMouseOver={() => setShowEditOption(true)}
-      onMouseLeave={() => setShowEditOption(false)}
-      onMouseDown={e => {
-        if (isMoveState) {
-          ref.addEventListener("mousemove", handleMouseMove);
-          initPos.current = getPosition(e);
-        }
-      }}
-      onMouseUp={() => {
-        if (isMoveState) {
-          ref.removeEventListener("mousemove", handleMouseMove);
-          initPos.current = null;
-        }
-      }}
-    >
-      {imageToolbar}
-      <div style={styles.container} className="full-img-container">
-        <Image style={{ visible: !!img }} {...props} />
+    <>
+      <div
+        className={cx("crop-img-container", {
+          move: isMoveState
+        })}
+        ref={saveRef}
+        style={styles.crop}
+        onMouseOver={() => setShowEditOption(true)}
+        onMouseLeave={() => setShowEditOption(false)}
+        onMouseDown={e => {
+          if (isMoveState) {
+            ref.addEventListener("mousemove", handleMouseMove);
+            initPos.current = getPosition(e);
+          }
+        }}
+        onMouseUp={() => {
+          if (isMoveState) {
+            ref.removeEventListener("mousemove", handleMouseMove);
+            initPos.current = null;
+          }
+        }}
+      >
+        {imageToolbar}
+        <div style={styles.container} className="full-img-container">
+          <Image style={{ visible: !!img }} {...props} />
+        </div>
+        {isMoveState && <Slider />}
       </div>
-    </div>
+    </>
   );
 }
 

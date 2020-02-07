@@ -12,3 +12,4 @@ export * from "./Grid";
 export * from "./EditableImage";
 export * from "./Icon";
 export * from "./List";
+export * from "./Slider";
