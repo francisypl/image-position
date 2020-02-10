@@ -20,6 +20,10 @@ export function setAboutProperty(state, dispatch) {
             card.pos = { ...card.pos, [containerStyle]: image.pos };
             delete image.pos;
           }
+          if (image.scale) {
+            card.scale = { ...card.scale, [containerStyle]: image.scale };
+            delete image.scale;
+          }
           return { ...card, ...image };
         } else if (!image.id) {
           return { ...card, ...image };
@@ -52,7 +56,7 @@ const initialState = {
         },
         {
           id: uuid(),
-          img: "https://img1.wsimg.com/isteam/stock/1051/:/rs=w:600,cg:true,m",
+          img: "//img1.wsimg.com/isteam/stock/0Q3OxNe/:/rs=w:600,cg:true,m",
           containerStyle: containerStyles.vertical
         }
       ]

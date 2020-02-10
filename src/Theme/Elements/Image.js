@@ -23,6 +23,8 @@ const DEFAULT_POSITION = {
   left: 0
 };
 
+const DEFAULT_SCALE = 1;
+
 const EDIT_STATES = {
   view: "view",
   move: "move"
@@ -62,12 +64,16 @@ function getSquareImgStyles() {
   });
 }
 
-function getDefaultImgStyles({ width, height } = {}, { left, top } = {}) {
+function getDefaultImgStyles(
+  { width, height } = {},
+  { left, top } = {},
+  scale
+) {
   return {
     container: {
       width,
       height,
-      transform: `translate(${left}px, ${top}px)`
+      transform: `translate(${left}px, ${top}px) scale(${scale}, ${scale})`
     }
   };
 }
@@ -85,9 +91,17 @@ function getStyles(containerStyle, ...args) {
   }
 }
 
-export function ImageContainer({ id, containerStyle, style, pos, ...props }) {
+export function ImageContainer({
+  id,
+  containerStyle,
+  style,
+  scale,
+  pos,
+  ...props
+}) {
   const [img, setImg] = useState();
   const [showEditOption, setShowEditOption] = useState(false);
+  const [imgScale, setScale] = useState(scale || DEFAULT_SCALE);
   const [editState, setEditState] = useState(EDIT_STATES.view);
   const [ref, setRef] = useState();
   const [position, setPosition] = useState(pos || DEFAULT_POSITION);
@@ -103,14 +117,15 @@ export function ImageContainer({ id, containerStyle, style, pos, ...props }) {
     setRef(ref);
   }, []);
 
-  function exitMove() {
+  const exitMove = useCallback(() => {
     setEditState(EDIT_STATES.view);
     setPosition(pos || DEFAULT_POSITION);
-  }
+    setScale(scale || DEFAULT_SCALE);
+  }, [pos, scale]);
 
   function saveMove() {
     setEditState(EDIT_STATES.view);
-    setCard({ id, pos: position });
+    setCard({ id, pos: position, scale: imgScale });
   }
 
   function handleMouseMove(e) {
@@ -131,9 +146,9 @@ export function ImageContainer({ id, containerStyle, style, pos, ...props }) {
     }
   }
 
-  function handleScaling(e) {
-    console.log(e);
-  }
+  const handleScale = useCallback(newScale => {
+    setScale(1 + newScale);
+  }, []);
 
   const showToolbar = showEditOption;
   const imageToolbar = showToolbar ? (
@@ -178,7 +193,7 @@ export function ImageContainer({ id, containerStyle, style, pos, ...props }) {
     setPosition(pos || DEFAULT_POSITION);
   }, [pos]);
 
-  const styles = getStyles(containerStyle, img, position);
+  const styles = getStyles(containerStyle, img, position, imgScale);
 
   return (
     <>
@@ -207,7 +222,9 @@ export function ImageContainer({ id, containerStyle, style, pos, ...props }) {
         <div style={styles.container} className="full-img-container">
           <Image style={{ visible: !!img }} {...props} />
         </div>
-        {isMoveState && <Slider onChange={handleScaling} />}
+        {isMoveState && (
+          <Slider defaultValue={scale - DEFAULT_SCALE} onChange={handleScale} />
+        )}
       </div>
     </>
   );

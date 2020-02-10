@@ -28,7 +28,7 @@ export default function About(props) {
             gridTemplateColumns="minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)"
             gridGap="2em"
           >
-            {data.map(({ id, img, containerStyle, pos }, i) => (
+            {data.map(({ id, img, containerStyle, pos, scale }, i) => (
               <Flex key={i} flexDirection="column" justifyContent="center">
                 <ImageContainer
                   id={id}
@@ -36,6 +36,7 @@ export default function About(props) {
                   src={img}
                   containerStyle={containerStyle}
                   pos={pos && pos[containerStyle]}
+                  scale={scale && scale[containerStyle]}
                 />
                 <Heading level={4} textStyle="h4" mt={24} mb={24}>
                   Sub Heading

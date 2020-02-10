@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo
+} from "react";
 import cx from "classnames";
 
 import { Icon } from "./Icon";
@@ -6,29 +12,41 @@ import { Icon } from "./Icon";
 const INIT_POS = 25;
 const END_POS = 138;
 
-export function Slider({ min, max, defaultValue, onChange }) {
+function normalize(value) {
+  return (value - INIT_POS) / (END_POS - INIT_POS);
+}
+
+function getPositionFromValue(value) {
+  return value * END_POS + INIT_POS;
+}
+
+export function Slider({ defaultValue, onChange }) {
   const [handleRef, setHandleRef] = useState();
   const [isDragging, setIsDragging] = useState(false);
-  const [initPix, setInitPix] = useState();
-  const [position, setPosition] = useState(INIT_POS);
-  const handleDrag = useRef();
+  const initPix = useRef();
+  const [position, setPosition] = useState(
+    getPositionFromValue(defaultValue) || INIT_POS
+  );
 
-  useEffect(() => {
-    handleDrag.current = function(e) {
-      const delta = e.x - initPix;
-      setPosition(Math.min(Math.max(INIT_POS, delta + INIT_POS), END_POS));
-      onChange();
-    };
-  }, [initPix]);
+  const handleDrag = useCallback(
+    e => {
+      const delta = e.x - initPix.current;
+      console.log(position);
+      const newPos = Math.min(Math.max(INIT_POS, delta + position), END_POS);
+      setPosition(newPos);
+      onChange(normalize(newPos));
+    },
+    [onChange]
+  );
 
-  function handleMouseUp() {
+  const handleMouseUp = useCallback(() => {
     setIsDragging(false);
-    window.removeEventListener("mousemove", handleDrag.current);
-  }
+    window.removeEventListener("mousemove", handleDrag);
+  }, [handleDrag]);
 
   const saveRef = useCallback(ref => {
     if (ref) {
-      setInitPix(ref.getBoundingClientRect().left);
+      initPix.current = ref.getBoundingClientRect().left;
       setHandleRef(ref);
     }
   }, []);
@@ -46,7 +64,7 @@ export function Slider({ min, max, defaultValue, onChange }) {
         onMouseDown={e => {
           e.stopPropagation();
           setIsDragging(true);
-          window.addEventListener("mousemove", handleDrag.current);
+          window.addEventListener("mousemove", handleDrag);
         }}
         onMouseUp={handleMouseUp}
       />
