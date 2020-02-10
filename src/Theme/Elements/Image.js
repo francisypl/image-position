@@ -27,7 +27,8 @@ const DEFAULT_SCALE = 1;
 
 const EDIT_STATES = {
   view: "view",
-  move: "move"
+  move: "move",
+  moving: "moving"
 };
 
 function getPosition(e) {
@@ -112,6 +113,7 @@ export function ImageContainer({
   const initPos = useRef();
   const isViewState = editState === EDIT_STATES.view;
   const isMoveState = editState === EDIT_STATES.move;
+  const isMovingState = editState === EDIT_STATES.moving;
 
   const saveRef = useCallback(ref => {
     setRef(ref);
@@ -128,30 +130,36 @@ export function ImageContainer({
     setCard({ id, pos: position, scale: imgScale });
   }
 
-  const handleMouseMove = useCallback(
-    e => {
+  useEffect(() => {
+    function handleMouseMove(e) {
       const mousePosition = getPosition(e);
       if (mousePosition && initPos.current) {
         const delta = {
           x: initPos.current.x - mousePosition.x,
           y: initPos.current.y - mousePosition.y
         };
-        console.log("img", imgScale);
-        const maxWidth = img.width - containerDimension.width * imgScale;
-        const maxHeight = img.height - containerDimension.height * imgScale;
+        const extraWidth = (img.width * imgScale - img.width) / 2;
+        const extraHeight = (img.height * imgScale - img.height) / 2;
+        const maxWidth = img.width + extraWidth - containerDimension.width;
+        const maxHeight = img.height + extraHeight - containerDimension.height;
         const top = Math.min(
           Math.max(maxHeight * -1, position.top - delta.y),
-          0
+          extraHeight
         );
         const left = Math.min(
           Math.max(maxWidth * -1, position.left - delta.x),
-          0
+          extraWidth
         );
         setPosition({ top, left });
       }
-    },
-    [initPos, img, containerDimension, imgScale, position]
-  );
+    }
+    if (editState === EDIT_STATES.moving) {
+      window.addEventListener("mousemove", handleMouseMove);
+    }
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [editState]);
 
   const handleScale = useCallback(newScale => {
     setScale(1 + newScale);
@@ -165,7 +173,7 @@ export function ImageContainer({
           items={
             isViewState
               ? ["move", "container"]
-              : isMoveState
+              : isMoveState || isMovingState
               ? ["save", "exit"]
               : []
           }
@@ -196,10 +204,6 @@ export function ImageContainer({
     }
   }, [containerStyle, ref]);
 
-  useEffect(() => {
-    setPosition(pos || DEFAULT_POSITION);
-  }, [pos]);
-
   const styles = getStyles(containerStyle, img, position, imgScale);
 
   return (
@@ -214,13 +218,13 @@ export function ImageContainer({
         onMouseLeave={() => setShowEditOption(false)}
         onMouseDown={e => {
           if (isMoveState && e.target.tagName === "IMG") {
-            ref.addEventListener("mousemove", handleMouseMove);
+            setEditState(EDIT_STATES.moving);
             initPos.current = getPosition(e);
           }
         }}
         onMouseUp={() => {
-          if (isMoveState) {
-            ref.removeEventListener("mousemove", handleMouseMove);
+          if (isMovingState) {
+            setEditState(EDIT_STATES.move);
             initPos.current = null;
           }
         }}
@@ -229,7 +233,7 @@ export function ImageContainer({
         <div style={styles.container} className="full-img-container">
           <Image style={{ visible: !!img }} {...props} />
         </div>
-        {isMoveState && (
+        {(isMoveState || isMovingState) && (
           <Slider defaultValue={scale - DEFAULT_SCALE} onChange={handleScale} />
         )}
       </div>
