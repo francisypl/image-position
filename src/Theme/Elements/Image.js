@@ -128,23 +128,30 @@ export function ImageContainer({
     setCard({ id, pos: position, scale: imgScale });
   }
 
-  function handleMouseMove(e) {
-    const mousePosition = getPosition(e);
-    if (mousePosition && initPos.current) {
-      const delta = {
-        x: initPos.current.x - mousePosition.x,
-        y: initPos.current.y - mousePosition.y
-      };
-      const maxWidth = img.width - containerDimension.width;
-      const maxHeight = img.height - containerDimension.height;
-      const top = Math.min(Math.max(maxHeight * -1, position.top - delta.y), 0);
-      const left = Math.min(
-        Math.max(maxWidth * -1, position.left - delta.x),
-        0
-      );
-      setPosition({ top, left });
-    }
-  }
+  const handleMouseMove = useCallback(
+    e => {
+      const mousePosition = getPosition(e);
+      if (mousePosition && initPos.current) {
+        const delta = {
+          x: initPos.current.x - mousePosition.x,
+          y: initPos.current.y - mousePosition.y
+        };
+        console.log("img", imgScale);
+        const maxWidth = img.width - containerDimension.width * imgScale;
+        const maxHeight = img.height - containerDimension.height * imgScale;
+        const top = Math.min(
+          Math.max(maxHeight * -1, position.top - delta.y),
+          0
+        );
+        const left = Math.min(
+          Math.max(maxWidth * -1, position.left - delta.x),
+          0
+        );
+        setPosition({ top, left });
+      }
+    },
+    [initPos, img, containerDimension, imgScale, position]
+  );
 
   const handleScale = useCallback(newScale => {
     setScale(1 + newScale);
@@ -206,7 +213,7 @@ export function ImageContainer({
         onMouseOver={() => setShowEditOption(true)}
         onMouseLeave={() => setShowEditOption(false)}
         onMouseDown={e => {
-          if (isMoveState) {
+          if (isMoveState && e.target.tagName === "IMG") {
             ref.addEventListener("mousemove", handleMouseMove);
             initPos.current = getPosition(e);
           }

@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useMemo
-} from "react";
+import React, { useState, useRef, useCallback } from "react";
 import cx from "classnames";
 
 import { Icon } from "./Icon";
@@ -31,7 +25,6 @@ export function Slider({ defaultValue, onChange }) {
   const handleDrag = useCallback(
     e => {
       const delta = e.x - initPix.current;
-      console.log(position);
       const newPos = Math.min(Math.max(INIT_POS, delta + position), END_POS);
       setPosition(newPos);
       onChange(normalize(newPos));
