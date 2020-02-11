@@ -15,8 +15,8 @@ const cropIcons = [
 const containerIcons = [
   { name: containerStyles.square, label: "Square" },
   { name: containerStyles.horizontal, label: "Horizontal" },
-  { name: containerStyles.vertical, label: "Vertical" },
-  { name: containerStyles.resize, label: "Resize" }
+  { name: containerStyles.vertical, label: "Vertical" }
+  // { name: containerStyles.resize, label: "Resize" }
 ];
 
 export default function Toolbar({

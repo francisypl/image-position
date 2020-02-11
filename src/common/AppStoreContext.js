@@ -7,6 +7,18 @@ import * as containerStyles from "../constants/containerStyles";
 export const SET_MODAL_ACTION = "SET_MODAL_ACTION";
 export const UNSET_MODAL_ACTION = "UNSET_MODAL_ACTION";
 export const SET_ABOUT_CARDS = "SET_ABOUT_CARDS";
+export const SET_WELCOME = "SET_WELCOME";
+
+export function setWelcome(state, dispatch) {
+  return newWelcome => {
+    const welcome = getWelcome(state);
+    const payload = { ...welcome, ...newWelcome };
+    dispatch({
+      type: SET_WELCOME,
+      payload
+    });
+  };
+}
 
 export function setAboutProperty(state, dispatch) {
   return image => {
@@ -39,25 +51,33 @@ export function getAboutCards(state) {
   return get(state, "widgets.about.cards", []);
 }
 
+export function getWelcome(state) {
+  return get(state, "widgets.welcome", {});
+}
+
 const initialState = {
   modal: null,
   widgets: {
+    welcome: {
+      img: "//img1.wsimg.com/isteam/stock/0Q3OxNe/:/rs=w:600,cg:true,m",
+      containerStyle: containerStyles.square
+    },
     about: {
       cards: [
         {
+          img: "//img1.wsimg.com/isteam/stock/11938/:/rs=w:600cg:true",
           id: uuid(),
-          img: "https://img1.wsimg.com/isteam/stock/1036/:/rs=w:600,cg:true,m",
-          containerStyle: containerStyles.vertical
+          containerStyle: containerStyles.square
         },
         {
           id: uuid(),
           img: "//img1.wsimg.com/isteam/stock/105588/:/rs=w:600,cg:true,m",
-          containerStyle: containerStyles.vertical
+          containerStyle: containerStyles.square
         },
         {
           id: uuid(),
-          img: "//img1.wsimg.com/isteam/stock/0Q3OxNe/:/rs=w:600,cg:true,m",
-          containerStyle: containerStyles.vertical
+          img: "https://img1.wsimg.com/isteam/stock/1036/:/rs=w:600,cg:true,m",
+          containerStyle: containerStyles.square
         }
       ]
     }
@@ -76,6 +96,10 @@ function reducer(state, { type, payload }) {
   }
   if (type === SET_ABOUT_CARDS) {
     newState.widgets.about.cards = payload;
+    return newState;
+  }
+  if (type === SET_WELCOME) {
+    newState.widgets.welcome = payload;
     return newState;
   }
   return state;

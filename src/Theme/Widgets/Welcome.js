@@ -1,14 +1,35 @@
-import React from "react";
-import { Text, Heading, Section, Flex, Container, Button } from "../Elements";
+import React, { useContext } from "react";
+import {
+  Text,
+  Heading,
+  Section,
+  Flex,
+  Button,
+  Grid,
+  ImageContainer
+} from "../Elements";
 import Widget from "./Widget";
+import AppStoreContext, {
+  getWelcome,
+  setWelcome
+} from "../../common/AppStoreContext";
 
 const textString =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et ligula ullamcorper malesuada proin libero nunc.";
 export default function Welcome(props) {
+  const { state, dispatch } = useContext(AppStoreContext);
+  const { img, containerStyle, pos, scale } = getWelcome(state);
   return (
     <Widget {...props}>
       <Section bg="pageBackground" py={80} px={20}>
-        <Container>
+        <Grid gridTemplateColumns="1fr 1fr">
+          <ImageContainer
+            src={img}
+            containerStyle={containerStyle}
+            pos={pos}
+            scale={scale}
+            onChange={setWelcome(state, dispatch)}
+          />
           <Flex
             flexDirection="column"
             justifyContent="center"
@@ -25,7 +46,7 @@ export default function Welcome(props) {
             </Text>
             <Button variant="primary">Welcome</Button>
           </Flex>
-        </Container>
+        </Grid>
       </Section>
     </Widget>
   );

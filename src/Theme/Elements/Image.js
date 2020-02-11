@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useContext,
-  useRef
-} from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { merge } from "lodash";
 import cx from "classnames";
 
@@ -13,9 +7,6 @@ import * as containerStyles from "../../constants/containerStyles";
 import ImageToolbar from "../../Editor/ImageEditor/Toolbar";
 import Align from "../../Editor/Align";
 import Layer from "../../Editor/Layer";
-import AppStoreContext, {
-  setAboutProperty
-} from "../../common/AppStoreContext";
 import { Slider } from "./Slider";
 
 const DEFAULT_POSITION = {
@@ -98,6 +89,7 @@ export function ImageContainer({
   style,
   scale,
   pos,
+  onChange,
   ...props
 }) {
   const [img, setImg] = useState();
@@ -108,8 +100,6 @@ export function ImageContainer({
   const [position, setPosition] = useState(pos || DEFAULT_POSITION);
   const [containerDimension, setContainerDimension] = useState();
 
-  const { state, dispatch } = useContext(AppStoreContext);
-  const setCard = setAboutProperty(state, dispatch);
   const initPos = useRef();
   const isViewState = editState === EDIT_STATES.view;
   const isMoveState = editState === EDIT_STATES.move;
@@ -127,7 +117,7 @@ export function ImageContainer({
 
   function saveMove() {
     setEditState(EDIT_STATES.view);
-    setCard({ id, pos: position, scale: imgScale });
+    onChange({ id, pos: position, scale: imgScale });
   }
 
   useEffect(() => {
@@ -178,7 +168,7 @@ export function ImageContainer({
               : []
           }
           onContainerChange={newStyle =>
-            setCard({ id, containerStyle: newStyle })
+            onChange({ id, containerStyle: newStyle })
           }
           onMoveClick={() => setEditState(EDIT_STATES.move)}
           onSave={saveMove}

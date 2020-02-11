@@ -5,6 +5,7 @@ import { Icon } from "./Icon";
 
 const INIT_POS = 25;
 const END_POS = 138;
+const STEP = (END_POS - INIT_POS) / 10;
 
 function normalize(value) {
   return (value - INIT_POS) / (END_POS - INIT_POS);
@@ -22,12 +23,15 @@ export function Slider({ defaultValue, onChange }) {
     getPositionFromValue(defaultValue) || INIT_POS
   );
 
+  function incrementPosition(delta) {
+    const newPos = Math.min(Math.max(INIT_POS, delta + position), END_POS);
+    setPosition(newPos);
+    onChange(normalize(newPos));
+  }
+
   const handleDrag = useCallback(
     e => {
-      const delta = e.x - initPix.current;
-      const newPos = Math.min(Math.max(INIT_POS, delta + position), END_POS);
-      setPosition(newPos);
-      onChange(normalize(newPos));
+      incrementPosition(e.x - initPix.current);
     },
     [onChange]
   );
@@ -46,8 +50,16 @@ export function Slider({ defaultValue, onChange }) {
 
   return (
     <div className="slider-container" onMouseUp={handleMouseUp}>
-      <Icon className="slider-zoom-in" name="zoomIn" />
-      <Icon className="slider-zoom-out" name="zoomOut" />
+      <Icon
+        className="slider-zoom-in"
+        name="zoomIn"
+        onClick={() => incrementPosition(STEP)}
+      />
+      <Icon
+        className="slider-zoom-out"
+        name="zoomOut"
+        onClick={() => incrementPosition(STEP * -1)}
+      />
       <div
         ref={saveRef}
         className={cx("slider-handle", { active: isDragging })}

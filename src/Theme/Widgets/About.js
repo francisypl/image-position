@@ -12,12 +12,15 @@ import {
   Button
 } from "../Elements";
 import Widget from "./Widget";
-import AppStoreContext, { getAboutCards } from "../../common/AppStoreContext";
+import AppStoreContext, {
+  getAboutCards,
+  setAboutProperty
+} from "../../common/AppStoreContext";
 
 const textString =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et ligula ullamcorper malesuada proin libero nunc.";
 export default function About(props) {
-  const { state } = useContext(AppStoreContext);
+  const { state, dispatch } = useContext(AppStoreContext);
   const data = getAboutCards(state);
   return (
     <Widget showToolbar {...props}>
@@ -32,11 +35,11 @@ export default function About(props) {
               <Flex key={i} flexDirection="column" justifyContent="center">
                 <ImageContainer
                   id={id}
-                  editing={i === 0}
                   src={img}
                   containerStyle={containerStyle}
                   pos={pos && pos[containerStyle]}
                   scale={scale && scale[containerStyle]}
+                  onChange={setAboutProperty(state, dispatch)}
                 />
                 <Heading level={4} textStyle="h4" mt={24} mb={24}>
                   Sub Heading
