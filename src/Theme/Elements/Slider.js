@@ -39,6 +39,7 @@ export function Slider({ defaultValue, onChange }) {
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
     window.removeEventListener("mousemove", handleDrag);
+    window.removeEventListener("mouseup", handleMouseUp);
   }, [handleDrag]);
 
   const saveRef = useCallback(ref => {
@@ -49,7 +50,7 @@ export function Slider({ defaultValue, onChange }) {
   }, []);
 
   return (
-    <div className="slider-container" onMouseUp={handleMouseUp}>
+    <div className="slider-container">
       <Icon
         className="slider-zoom-in"
         name="zoomIn"
@@ -70,8 +71,8 @@ export function Slider({ defaultValue, onChange }) {
           e.stopPropagation();
           setIsDragging(true);
           window.addEventListener("mousemove", handleDrag);
+          window.addEventListener("mouseup", handleMouseUp);
         }}
-        onMouseUp={handleMouseUp}
       />
       <div className="slider-bar" />
     </div>

@@ -55,28 +55,45 @@ export function getWelcome(state) {
   return get(state, "widgets.welcome", {});
 }
 
+export function getAllImages(state) {
+  return get(state, "images", []);
+}
+
+const images = [
+  "//img1.wsimg.com/isteam/stock/0Q3OxNe/:/rs=w:600",
+  "//img1.wsimg.com/isteam/stock/11938/:/rs=w:600",
+  "//img1.wsimg.com/isteam/stock/105588/:/rs=w:600",
+  "//img1.wsimg.com/isteam/stock/1036/:/rs=w:600",
+  "//img1.wsimg.com/isteam/stock/105065/:/rs=w:600",
+  "//img1.wsimg.com/isteam/stock/105589/:/rs=w:600",
+  "//img1.wsimg.com/isteam/stock/107964/:/rs=w:600",
+  "//img1.wsimg.com/isteam/stock/107948/:/rs=w:600",
+  "//img1.wsimg.com/isteam/stock/108721/:/rs=w:600"
+];
+
 const initialState = {
   modal: null,
+  images,
   widgets: {
     welcome: {
-      img: "//img1.wsimg.com/isteam/stock/0Q3OxNe/:/rs=w:600,cg:true,m",
+      img: images[0],
       containerStyle: containerStyles.square
     },
     about: {
       cards: [
         {
-          img: "//img1.wsimg.com/isteam/stock/11938/:/rs=w:600cg:true",
+          img: images[1],
           id: uuid(),
           containerStyle: containerStyles.square
         },
         {
           id: uuid(),
-          img: "//img1.wsimg.com/isteam/stock/105588/:/rs=w:600,cg:true,m",
+          img: images[2],
           containerStyle: containerStyles.square
         },
         {
           id: uuid(),
-          img: "https://img1.wsimg.com/isteam/stock/1036/:/rs=w:600,cg:true,m",
+          img: images[3],
           containerStyle: containerStyles.square
         }
       ]

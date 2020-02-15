@@ -26,6 +26,7 @@ export default function Toolbar({
   onContainerChange,
   onMoveClick,
   onSave,
+  onImage,
   onExit
 }) {
   const actions = {
@@ -42,7 +43,7 @@ export default function Toolbar({
       </ToolbarIcon>
     ),
     container: (
-      <ToolbarIcon name="image">
+      <ToolbarIcon name="crop">
         <List className="toolbar-list">
           {containerIcons.map(icon =>
             isWidgetLevel && icon.name === containerStyles.resize ? null : (
@@ -57,7 +58,8 @@ export default function Toolbar({
     ),
     move: <Icon name="move" onClick={onMoveClick} />,
     save: <Icon name="check" onClick={onSave} />,
-    exit: <Icon name="close" onClick={onExit} />
+    exit: <Icon name="close" onClick={onExit} />,
+    image: <Icon name="image" onClick={onImage} />
   };
   return (
     <div className="image-edit-toolbar">

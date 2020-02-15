@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useContext
+} from "react";
 import { merge } from "lodash";
 import cx from "classnames";
 
@@ -8,6 +14,10 @@ import ImageToolbar from "../../Editor/ImageEditor/Toolbar";
 import Align from "../../Editor/Align";
 import Layer from "../../Editor/Layer";
 import { Slider } from "./Slider";
+import AppStoreContext, {
+  SET_MODAL_ACTION
+} from "../../common/AppStoreContext";
+import ImagePicker from "../../Editor/ImagePicker";
 
 const DEFAULT_POSITION = {
   top: 0,
@@ -100,6 +110,8 @@ export function ImageContainer({
   const [position, setPosition] = useState(pos || DEFAULT_POSITION);
   const [containerDimension, setContainerDimension] = useState();
 
+  const { dispatch } = useContext(AppStoreContext);
+
   const initPos = useRef();
   const isViewState = editState === EDIT_STATES.view;
   const isMoveState = editState === EDIT_STATES.move;
@@ -143,17 +155,36 @@ export function ImageContainer({
         setPosition({ top, left });
       }
     }
+    function handleMouseUp() {
+      if (isMovingState) {
+        setEditState(EDIT_STATES.move);
+        initPos.current = null;
+      }
+    }
     if (editState === EDIT_STATES.moving) {
       window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
     }
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [editState]);
 
   const handleScale = useCallback(newScale => {
     setScale(1 + newScale);
   }, []);
+
+  function handleImageSelect(e) {
+    console.log("selected", e);
+  }
+
+  const handleOnImageClick = useCallback(() => {
+    return void dispatch({
+      type: SET_MODAL_ACTION,
+      payload: <ImagePicker onSelect={handleImageSelect} />
+    });
+  }, [dispatch]);
 
   const showToolbar = showEditOption;
   const imageToolbar = showToolbar ? (
@@ -162,7 +193,7 @@ export function ImageContainer({
         <ImageToolbar
           items={
             isViewState
-              ? ["move", "container"]
+              ? ["move", "container", "image"]
               : isMoveState || isMovingState
               ? ["save", "exit"]
               : []
@@ -172,6 +203,7 @@ export function ImageContainer({
           }
           onMoveClick={() => setEditState(EDIT_STATES.move)}
           onSave={saveMove}
+          onImage={handleOnImageClick}
           onExit={exitMove}
         />
       </Align>
@@ -210,12 +242,6 @@ export function ImageContainer({
           if (isMoveState && e.target.tagName === "IMG") {
             setEditState(EDIT_STATES.moving);
             initPos.current = getPosition(e);
-          }
-        }}
-        onMouseUp={() => {
-          if (isMovingState) {
-            setEditState(EDIT_STATES.move);
-            initPos.current = null;
           }
         }}
       >

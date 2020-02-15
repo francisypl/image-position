@@ -495,11 +495,17 @@ aside {
 #modal-close-icon {
   float: right;
   cursor: pointer;
+  fill: black;
 }
 
 .crop-img-container {
   position: relative;
   overflow: hidden;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
   &.move {
     cursor: move;
   }
@@ -508,6 +514,11 @@ aside {
 .full-img-container {
   position: absolute;
   top: 0px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
   img{
     display: block;
     width: 100%;
@@ -536,12 +547,12 @@ aside {
 }
 
 .slider-handle {
-  width: 13px;
-  height: 13px;
+  width: 16px;
+  height: 16px;
   background-color: #fff;
-  border-radius: 12px;
+  border-radius: 16px;
   position: absolute;
-  top: 7px;
+  top: 6px;
   left: 25px;
   cursor: grab;
   &.active {
@@ -573,4 +584,58 @@ aside {
   left: 5px;
   top: 5px;
   margin: unset;
+}
+
+.img-picker-container {
+  background-color: #fff;
+  padding: 20px;
+  margin-top: 25px;
+  position: relative;
+}
+
+.img-picker-gallery {
+  max-height: 600px;
+  overflow-y: scroll;
+}
+
+.img-picker-btn-container {
+  padding-top: 20px;
+  width: 100%;
+  bottom: 0px;
+  left: 0px;
+  display: flex;
+  justify-content: flex-end;
+  button {
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    padding: 10px 24px;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    border-width: 0;
+    display: inline-block;
+    min-height: 44px;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 0 solid transparent;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: none;
+    white-space: normal;
+    cursor: pointer;
+    outline: 0;
+    margin-right: 10px;
+  }
+  button.main {
+    color: #fff;
+    background: #111;
+    border-color: #111;
+  }
+  button.secondary {
+    border: #111 solid 2px;
+    color: #111;
+    background: #fff;
+  }
 }
