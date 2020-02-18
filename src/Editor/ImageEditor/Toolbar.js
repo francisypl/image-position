@@ -1,4 +1,5 @@
 import React from "react";
+import cx from "classnames";
 
 import { List, ListItem } from "../../Theme/Elements/List";
 import { Icon, ToolbarIcon } from "../../Theme/Elements/Icon";
@@ -23,6 +24,7 @@ export default function Toolbar({
   items,
   isWidgetLevel,
   onStartCrop,
+  containerStyle,
   onContainerChange,
   onMoveClick,
   onSave,
@@ -47,7 +49,10 @@ export default function Toolbar({
         <List className="toolbar-list">
           {containerIcons.map(icon =>
             isWidgetLevel && icon.name === containerStyles.resize ? null : (
-              <ListItem onClick={() => void onContainerChange(icon.name)}>
+              <ListItem
+                className={cx({ selected: containerStyle === icon.name })}
+                onClick={() => void onContainerChange(icon.name)}
+              >
                 <Icon name={icon.name} />
                 <span>{icon.label}</span>
               </ListItem>

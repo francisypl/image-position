@@ -445,6 +445,10 @@ aside {
   min-height: 35px;
   cursor: pointer;
   &:hover {
+    background-color: rgba(0,0,0,0.1);
+  }
+  &.selected {
+    font-weight: bold;
     background-color: rgba(0,0,0,0.1)
   }
 }
@@ -637,5 +641,13 @@ aside {
     border: #111 solid 2px;
     color: #111;
     background: #fff;
+  }
+}
+
+.img-picker-img {
+  cursor: pointer;
+  &.selected {
+    padding: 2px;
+    border: solid 2px #00A4A6;
   }
 }

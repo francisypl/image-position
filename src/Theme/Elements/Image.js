@@ -175,8 +175,8 @@ export function ImageContainer({
     setScale(1 + newScale);
   }, []);
 
-  function handleImageSelect(e) {
-    console.log("selected", e);
+  function handleImageSelect(img) {
+    onChange({ id, img, position: DEFAULT_POSITION, scale: DEFAULT_SCALE });
   }
 
   const handleOnImageClick = useCallback(() => {
@@ -193,11 +193,12 @@ export function ImageContainer({
         <ImageToolbar
           items={
             isViewState
-              ? ["move", "container", "image"]
+              ? ["move", "image", "container"]
               : isMoveState || isMovingState
               ? ["save", "exit"]
               : []
           }
+          containerStyle={containerStyle}
           onContainerChange={newStyle =>
             onChange({ id, containerStyle: newStyle })
           }
