@@ -26,6 +26,8 @@ const DEFAULT_POSITION = {
 
 const DEFAULT_SCALE = 1;
 
+const DEFAULT_ROTATION = 0;
+
 const EDIT_STATES = {
   view: "view",
   move: "move",
@@ -69,13 +71,14 @@ function getSquareImgStyles() {
 function getDefaultImgStyles(
   { width, height } = {},
   { left, top } = {},
-  scale
+  scale,
+  rotation
 ) {
   return {
     container: {
       width,
       height,
-      transform: `translate(${left}px, ${top}px) scale(${scale}, ${scale})`
+      transform: `translate(${left}px, ${top}px) scale(${scale}, ${scale}) rotate(${rotation}deg)`
     }
   };
 }
@@ -99,15 +102,18 @@ export function ImageContainer({
   style,
   scale,
   pos,
+  rotate,
   onChange,
   ...props
 }) {
   const [img, setImg] = useState();
+  const [curImgDimension, setCurImgDimension] = useState();
   const [showEditOption, setShowEditOption] = useState(false);
-  const [imgScale, setScale] = useState(scale || DEFAULT_SCALE);
   const [editState, setEditState] = useState(EDIT_STATES.view);
-  const [ref, setRef] = useState();
+  const [imgScale, setScale] = useState(scale || DEFAULT_SCALE);
   const [position, setPosition] = useState(pos || DEFAULT_POSITION);
+  const [rotation, setRotation] = useState(rotate || DEFAULT_ROTATION);
+  const [ref, setRef] = useState();
   const [containerDimension, setContainerDimension] = useState();
 
   const { dispatch } = useContext(AppStoreContext);
@@ -176,7 +182,9 @@ export function ImageContainer({
   }, []);
 
   function handleImageSelect(img) {
-    onChange({ id, img, position: DEFAULT_POSITION, scale: DEFAULT_SCALE });
+    if (img) {
+      onChange({ id, img, position: DEFAULT_POSITION, scale: DEFAULT_SCALE });
+    }
   }
 
   const handleOnImageClick = useCallback(() => {
@@ -186,6 +194,14 @@ export function ImageContainer({
     });
   }, [dispatch]);
 
+  const handleRotateRight = useCallback(() => {
+    setRotation((rotation + 90) % 360);
+    setCurImgDimension({
+      width: curImgDimension.height,
+      height: curImgDimension.width
+    });
+  }, [rotation, setRotation, curImgDimension, setCurImgDimension]);
+
   const showToolbar = showEditOption;
   const imageToolbar = showToolbar ? (
     <Layer>
@@ -193,7 +209,8 @@ export function ImageContainer({
         <ImageToolbar
           items={
             isViewState
-              ? ["move", "image", "container"]
+              ? // ? ["rotateRight", "move", "image", "container"]
+                ["move", "image", "container"]
               : isMoveState || isMovingState
               ? ["save", "exit"]
               : []
@@ -202,6 +219,7 @@ export function ImageContainer({
           onContainerChange={newStyle =>
             onChange({ id, containerStyle: newStyle })
           }
+          onRotateRight={handleRotateRight}
           onMoveClick={() => setEditState(EDIT_STATES.move)}
           onSave={saveMove}
           onImage={handleOnImageClick}
@@ -215,7 +233,9 @@ export function ImageContainer({
   useEffect(() => {
     const image = new window.Image();
     image.onload = function() {
-      setImg({ width: image.width, height: image.height });
+      const dimension = { width: image.width, height: image.height };
+      setImg(dimension);
+      setCurImgDimension(dimension);
     };
     image.src = props.src;
   }, [props.src]);
@@ -227,7 +247,7 @@ export function ImageContainer({
     }
   }, [containerStyle, ref]);
 
-  const styles = getStyles(containerStyle, img, position, imgScale);
+  const styles = getStyles(containerStyle, img, position, imgScale, rotation);
 
   return (
     <>

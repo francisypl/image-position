@@ -266,6 +266,43 @@ const zoomOut = (
   </svg>
 );
 
+const rotateRight = (
+  <svg
+    version="1.1"
+    id="Capa_1"
+    x="0px"
+    y="0px"
+    width="16"
+    height="16"
+    viewBox="0 0 80.429 80.428"
+    style={{ enableBackground: "new 0 0 80.429 80.428" }}
+  >
+    <g>
+      <path
+        d="M37.242,2.971c14.689,0,27.651,8.476,33.688,21.325l4.201-8.719l5.298,2.552l-8.721,18.102L53.605,27.51l2.553-5.298
+		l9.43,4.542C60.494,15.964,49.594,8.853,37.242,8.853C19.95,8.853,5.88,22.921,5.88,40.214s14.07,31.362,31.362,31.362
+		c10.183,0,19.769-4.975,25.647-13.307l4.805,3.391c-6.979,9.892-18.361,15.797-30.452,15.797C16.707,77.458,0,60.75,0,40.214
+		S16.707,2.971,37.242,2.971z"
+      />
+    </g>
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+  </svg>
+);
+
 const ICON_MAP = {
   crop,
   square,
@@ -278,7 +315,8 @@ const ICON_MAP = {
   check,
   resize,
   zoomIn,
-  zoomOut
+  zoomOut,
+  rotateRight
 };
 
 export function Icon({ name, className, children, ...props }) {
