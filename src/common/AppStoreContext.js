@@ -60,15 +60,20 @@ export function getAllImages(state) {
 }
 
 const images = [
-  "//img1.wsimg.com/isteam/stock/0Q3OxNe/:/rs=w:600",
-  "//img1.wsimg.com/isteam/stock/11938/:/rs=w:600",
-  "//img1.wsimg.com/isteam/stock/105588/:/rs=w:600",
-  "//img1.wsimg.com/isteam/stock/1036/:/rs=w:600",
-  "//img1.wsimg.com/isteam/stock/105065/:/rs=w:600",
-  "//img1.wsimg.com/isteam/stock/105589/:/rs=w:600",
-  "//img1.wsimg.com/isteam/stock/107964/:/rs=w:600",
-  "//img1.wsimg.com/isteam/stock/107948/:/rs=w:600",
-  "//img1.wsimg.com/isteam/stock/108721/:/rs=w:600"
+  "//img1.wsimg.com/isteam/stock/Q3qWgnw",
+  "//img1.wsimg.com/isteam/stock/105065",
+  "//img1.wsimg.com/isteam/stock/105588",
+  "//img1.wsimg.com/isteam/stock/105589",
+  "//img1.wsimg.com/isteam/stock/QBBljG5",
+  "//img1.wsimg.com/isteam/stock/105591",
+  "//img1.wsimg.com/isteam/stock/105592",
+  "//img1.wsimg.com/isteam/stock/Y8odJ5Y",
+  "//img1.wsimg.com/isteam/stock/11931",
+  "//img1.wsimg.com/isteam/stock/11936",
+  "//img1.wsimg.com/isteam/stock/11938",
+  "//img1.wsimg.com/isteam/stock/11947",
+  "//img1.wsimg.com/isteam/stock/7792",
+  "//img1.wsimg.com/isteam/stock/7804"
 ];
 
 const initialState = {
@@ -77,7 +82,7 @@ const initialState = {
   widgets: {
     welcome: {
       img: images[0],
-      containerStyle: containerStyles.square
+      containerStyle: containerStyles.vertical
     },
     about: {
       cards: [

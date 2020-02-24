@@ -32,7 +32,7 @@ export default function About(props) {
             gridGap="2em"
           >
             {data.map(({ id, img, containerStyle, pos, scale }, i) => (
-              <Flex key={i} flexDirection="column" justifyContent="center">
+              <Flex key={i} flexDirection="column" justifyContent="flex-start">
                 <ImageContainer
                   id={id}
                   src={img}

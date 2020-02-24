@@ -104,6 +104,7 @@ export function ImageContainer({
   pos,
   rotate,
   onChange,
+  src,
   ...props
 }) {
   const [img, setImg] = useState();
@@ -115,6 +116,7 @@ export function ImageContainer({
   const [rotation, setRotation] = useState(rotate || DEFAULT_ROTATION);
   const [ref, setRef] = useState();
   const [containerDimension, setContainerDimension] = useState();
+  const [imgSrc, setImgSrc] = useState();
 
   const { dispatch } = useContext(AppStoreContext);
 
@@ -123,20 +125,11 @@ export function ImageContainer({
   const isMoveState = editState === EDIT_STATES.move;
   const isMovingState = editState === EDIT_STATES.moving;
 
-  const saveRef = useCallback(ref => {
-    setRef(ref);
-  }, []);
-
-  const exitMove = useCallback(() => {
-    setEditState(EDIT_STATES.view);
-    setPosition(pos || DEFAULT_POSITION);
-    setScale(scale || DEFAULT_SCALE);
-  }, [pos, scale]);
-
-  function saveMove() {
-    setEditState(EDIT_STATES.view);
-    onChange({ id, pos: position, scale: imgScale });
-  }
+  const editted =
+    imgScale.top !== DEFAULT_SCALE.top ||
+    imgScale.left !== DEFAULT_SCALE.left ||
+    position !== DEFAULT_POSITION ||
+    rotation !== DEFAULT_ROTATION;
 
   useEffect(() => {
     function handleMouseMove(e) {
@@ -177,6 +170,51 @@ export function ImageContainer({
     };
   }, [editState]);
 
+  // get the original image's dimensions
+  useEffect(() => {
+    if (containerDimension && !editted) {
+      const image = new window.Image();
+      let newSrc = src;
+      // if it is a landscape photo we want to use full height
+      if (containerDimension.width > containerDimension.height) {
+        newSrc = `${src}/:/rs=w:${containerDimension.width}`;
+      } else {
+        // portait photo we want to use full width
+        newSrc = `${src}/:/rs=h:${containerDimension.height}`;
+      }
+      image.onload = function() {
+        const dimension = { width: image.width, height: image.height };
+        setImg(dimension);
+        setCurImgDimension(dimension);
+        setImgSrc(newSrc);
+      };
+      image.src = newSrc;
+    }
+  }, [containerDimension, editted, src]);
+
+  // get the container's dimensions
+  useEffect(() => {
+    if (ref) {
+      const dimensions = ref.getBoundingClientRect();
+      setContainerDimension(dimensions);
+    }
+  }, [containerStyle, ref]);
+
+  const saveRef = useCallback(ref => {
+    setRef(ref);
+  }, []);
+
+  const exitMove = useCallback(() => {
+    setEditState(EDIT_STATES.view);
+    setPosition(pos || DEFAULT_POSITION);
+    setScale(scale || DEFAULT_SCALE);
+  }, [pos, scale]);
+
+  function saveMove() {
+    setEditState(EDIT_STATES.view);
+    onChange({ id, pos: position, scale: imgScale });
+  }
+
   const handleScale = useCallback(newScale => {
     setScale(1 + newScale);
   }, []);
@@ -184,6 +222,9 @@ export function ImageContainer({
   function handleImageSelect(img) {
     if (img) {
       onChange({ id, img, position: DEFAULT_POSITION, scale: DEFAULT_SCALE });
+      setPosition(DEFAULT_POSITION);
+      setScale(DEFAULT_SCALE);
+      setRotation(DEFAULT_ROTATION);
     }
   }
 
@@ -209,8 +250,7 @@ export function ImageContainer({
         <ImageToolbar
           items={
             isViewState
-              ? // ? ["rotateRight", "move", "image", "container"]
-                ["move", "image", "container"]
+              ? ["move", "image", "container"]
               : isMoveState || isMovingState
               ? ["save", "exit"]
               : []
@@ -229,26 +269,7 @@ export function ImageContainer({
     </Layer>
   ) : null;
 
-  // get the original image's dimensions
-  useEffect(() => {
-    const image = new window.Image();
-    image.onload = function() {
-      const dimension = { width: image.width, height: image.height };
-      setImg(dimension);
-      setCurImgDimension(dimension);
-    };
-    image.src = props.src;
-  }, [props.src]);
-
-  // get the container's dimensions
-  useEffect(() => {
-    if (ref) {
-      setContainerDimension(ref.getBoundingClientRect());
-    }
-  }, [containerStyle, ref]);
-
   const styles = getStyles(containerStyle, img, position, imgScale, rotation);
-
   return (
     <>
       <div
@@ -268,7 +289,7 @@ export function ImageContainer({
       >
         {imageToolbar}
         <div style={styles.container} className="full-img-container">
-          <Image style={{ visible: !!img }} {...props} />
+          <Image style={{ visible: !!img }} src={imgSrc} {...props} />
         </div>
         {(isMoveState || isMovingState) && (
           <Slider defaultValue={scale - DEFAULT_SCALE} onChange={handleScale} />
