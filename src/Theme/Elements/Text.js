@@ -8,3 +8,7 @@ export function Text(props) {
     <StyledText textStyle="text" color="textDefault" theme={theme} {...props} />
   );
 }
+
+export function Label(props) {
+  return <Text fontWeight="800" fontSize={1} {...props} />;
+}

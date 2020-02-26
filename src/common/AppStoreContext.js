@@ -46,7 +46,24 @@ export function setAboutProperty(state, dispatch) {
   };
 }
 
+export function setPropertyById(state, dispatch) {
+  return newImage => {
+    const welcome = getWelcome(state);
+    if (newImage.id === welcome.id) {
+      setWelcome(state, dispatch)(newImage);
+    } else {
+      setAboutProperty(state, dispatch)(newImage);
+    }
+  };
+}
+
 // selectors
+export function getDataById(state, id) {
+  return [state.widgets.welcome, ...state.widgets.about.cards].find(
+    img => img.id === id
+  );
+}
+
 export function getAboutCards(state) {
   return get(state, "widgets.about.cards", []);
 }
@@ -81,25 +98,42 @@ const initialState = {
   images,
   widgets: {
     welcome: {
+      id: uuid(),
       img: images[0],
-      containerStyle: containerStyles.vertical
+      containerStyle: containerStyles.vertical,
+      caption: "",
+      link: {
+        enabled: false
+      }
     },
     about: {
       cards: [
         {
           img: images[1],
           id: uuid(),
-          containerStyle: containerStyles.square
+          containerStyle: containerStyles.square,
+          caption: "",
+          link: {
+            enabled: false
+          }
         },
         {
           id: uuid(),
           img: images[2],
-          containerStyle: containerStyles.square
+          containerStyle: containerStyles.square,
+          caption: "",
+          link: {
+            enabled: false
+          }
         },
         {
           id: uuid(),
           img: images[3],
-          containerStyle: containerStyles.square
+          containerStyle: containerStyles.square,
+          caption: "",
+          link: {
+            enabled: false
+          }
         }
       ]
     }

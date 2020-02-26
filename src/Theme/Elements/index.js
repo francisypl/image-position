@@ -13,3 +13,5 @@ export * from "./EditableImage";
 export * from "./Icon";
 export * from "./List";
 export * from "./Slider";
+export * from "./Toggle";
+export * from "./Input";

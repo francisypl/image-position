@@ -18,18 +18,23 @@ const textString =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et ligula ullamcorper malesuada proin libero nunc.";
 export default function Welcome(props) {
   const { state, dispatch } = useContext(AppStoreContext);
-  const { img, containerStyle, pos, scale } = getWelcome(state);
+  const { id, img, containerStyle, pos, scale } = getWelcome(state);
+  const hasImage = !!img;
+  const columns = hasImage ? "1fr 1fr" : "1fr";
   return (
     <Widget {...props}>
       <Section bg="pageBackground" py={80} px={20}>
-        <Grid gridTemplateColumns="1fr 1fr">
-          <ImageContainer
-            src={img}
-            containerStyle={containerStyle}
-            pos={pos}
-            scale={scale}
-            onChange={setWelcome(state, dispatch)}
-          />
+        <Grid gridTemplateColumns={columns}>
+          {hasImage && (
+            <ImageContainer
+              id={id}
+              src={img}
+              containerStyle={containerStyle}
+              pos={pos}
+              scale={scale}
+              onChange={setWelcome(state, dispatch)}
+            />
+          )}
           <Flex
             flexDirection="column"
             justifyContent="center"

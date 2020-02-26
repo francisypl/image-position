@@ -1,5 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import RouteContext, { getRoute } from "../common/RouteStoreContext";
 
 export default function MutatorSection({ children }) {
-  return <section className="mutator-section">{children}</section>;
+  const { state } = useContext(RouteContext);
+  return (
+    <section className="mutator-section">
+      {children({ route: getRoute(state) })}
+    </section>
+  );
 }

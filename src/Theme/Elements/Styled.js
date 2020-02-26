@@ -186,6 +186,25 @@ export const StyledButton = styled("button")(
   color
 );
 
+export const StyledInput = styled("input")(
+  borders,
+  borderRadius,
+  space,
+  fontSize,
+  height,
+  border,
+  borderTop,
+  borderRight,
+  borderBottom,
+  borderLeft,
+  borderWidth,
+  borderStyle,
+  borderColor,
+  borderRadius,
+  maxWidth,
+  color
+);
+
 export const StyledText = styled("p")(
   color,
   fontSize,

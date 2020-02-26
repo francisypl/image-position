@@ -17,7 +17,11 @@ import { Slider } from "./Slider";
 import AppStoreContext, {
   SET_MODAL_ACTION
 } from "../../common/AppStoreContext";
+import RouteStoreContext, {
+  setRouteState
+} from "../../common/RouteStoreContext";
 import ImagePicker from "../../Editor/ImagePicker";
+import * as routes from "../../constants/routes";
 
 const DEFAULT_POSITION = {
   top: 0,
@@ -119,6 +123,9 @@ export function ImageContainer({
   const [imgSrc, setImgSrc] = useState();
 
   const { dispatch } = useContext(AppStoreContext);
+  const { state: routeState, dispatch: routeDisptach } = useContext(
+    RouteStoreContext
+  );
 
   const initPos = useRef();
   const isViewState = editState === EDIT_STATES.view;
@@ -243,6 +250,18 @@ export function ImageContainer({
     });
   }, [rotation, setRotation, curImgDimension, setCurImgDimension]);
 
+  const handleDelete = function() {
+    onChange({ id, img: null });
+  };
+
+  const handleNavigate = e => {
+    e.stopPropagation();
+    setRouteState(routeState, routeDisptach)({
+      route: routes.IMAGE,
+      focused: id
+    });
+  };
+
   const showToolbar = showEditOption;
   const imageToolbar = showToolbar ? (
     <Layer>
@@ -250,7 +269,7 @@ export function ImageContainer({
         <ImageToolbar
           items={
             isViewState
-              ? ["move", "image", "container"]
+              ? ["delete", "move", "image", "container"]
               : isMoveState || isMovingState
               ? ["save", "exit"]
               : []
@@ -264,6 +283,7 @@ export function ImageContainer({
           onSave={saveMove}
           onImage={handleOnImageClick}
           onExit={exitMove}
+          onDelete={handleDelete}
         />
       </Align>
     </Layer>
@@ -286,6 +306,7 @@ export function ImageContainer({
             initPos.current = getPosition(e);
           }
         }}
+        onClick={handleNavigate}
       >
         {imageToolbar}
         <div style={styles.container} className="full-img-container">

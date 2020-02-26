@@ -42,6 +42,7 @@ aside {
   padding-bottom: 0px;
   height: 100vh;
   position: relative;
+  overflow-y: scroll;
 }
 
 .zoom-controls {
@@ -650,4 +651,88 @@ aside {
     padding: 2px;
     border: solid 2px #00A4A6;
   }
+}
+
+.ux-toggle {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  margin-bottom: 0;
+  font-size: 0;
+  vertical-align: -7px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-right: 8px;
+  line-height: 1;
+}
+
+.ux-toggle .ux-toggle-checkbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  opacity: 0;
+}
+
+.ux-toggle .ux-toggle-bg {
+  width: 41px;
+  height: 24px;
+  border-radius: 15px;
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  background: transparent;
+  border: 2px solid #616779;
+  transition: background .1s ease-out,border .1s ease-out;
+}
+
+.ux-toggle .ux-toggle-handle {
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  background-color: #616779;
+  position: absolute;
+  top: 5px;
+  z-index: 4;
+  display: inline-flex;
+  top: 4px;
+  left: 4px;
+}
+
+.ux-toggle .ux-toggle-checkbox:checked~.ux-toggle-bg {
+  background-color: #00a4a6;
+  border-color: #00a4a6;
+}
+
+.ux-toggle .ux-toggle-checkbox:checked~.ux-toggle-handle {
+  background: #30333b;
+  left: 21px;
+}
+
+.el-input {
+  border-radius: 3px;
+  box-shadow: none;
+  box-sizing: border-box;
+  cursor: auto;
+  font-size: .875rem;
+  padding: 6px 12px;
+  width: 100%;
+  text-indent: 0;
+  height: 42px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  color: #fff;
+  background-color: #30333b;
+  background-image: none;
+  background-clip: padding-box;
+  border: 1px solid #616779;
+  &:focus {
+    border: 1px solid #fff;
+  }
+  vertical-align: middle;
+  outline: none;
 }

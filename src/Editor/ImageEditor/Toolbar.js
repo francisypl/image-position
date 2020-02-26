@@ -29,6 +29,7 @@ export default function Toolbar({
   onMoveClick,
   onSave,
   onRotateRight,
+  onDelete,
   onImage,
   onExit
 }) {
@@ -66,7 +67,8 @@ export default function Toolbar({
     save: <Icon name="check" onClick={onSave} />,
     exit: <Icon name="close" onClick={onExit} />,
     image: <Icon name="image" onClick={onImage} />,
-    rotateRight: <Icon name="rotateRight" onClick={onRotateRight} />
+    rotateRight: <Icon name="rotateRight" onClick={onRotateRight} />,
+    delete: <Icon name="trash" onClick={onDelete} />
   };
   return (
     <div className="image-edit-toolbar">

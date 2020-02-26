@@ -33,14 +33,16 @@ export default function About(props) {
           >
             {data.map(({ id, img, containerStyle, pos, scale }, i) => (
               <Flex key={i} flexDirection="column" justifyContent="flex-start">
-                <ImageContainer
-                  id={id}
-                  src={img}
-                  containerStyle={containerStyle}
-                  pos={pos && pos[containerStyle]}
-                  scale={scale && scale[containerStyle]}
-                  onChange={setAboutProperty(state, dispatch)}
-                />
+                {img && (
+                  <ImageContainer
+                    id={id}
+                    src={img}
+                    containerStyle={containerStyle}
+                    pos={pos && pos[containerStyle]}
+                    scale={scale && scale[containerStyle]}
+                    onChange={setAboutProperty(state, dispatch)}
+                  />
+                )}
                 <Heading level={4} textStyle="h4" mt={24} mb={24}>
                   Sub Heading
                 </Heading>

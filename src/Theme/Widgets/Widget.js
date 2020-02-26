@@ -9,6 +9,9 @@ import ImageToolbar from "../../Editor/ImageEditor/Toolbar";
 import AppStoreContext, {
   setAboutProperty
 } from "../../common/AppStoreContext";
+import RouteStoreContext, {
+  setRouteState
+} from "../../common/RouteStoreContext";
 
 const icon = (
   <svg width={16} height={16}>
@@ -44,6 +47,10 @@ export default function Widget({
 
   const { state, dispatch } = useContext(AppStoreContext);
   const setCard = setAboutProperty(state, dispatch);
+  const { state: routeState, dispatch: routeDispatch } = useContext(
+    RouteStoreContext
+  );
+  const routeTo = setRouteState(routeState, routeDispatch);
 
   const newTheme = theme({
     color: colors.primary,
@@ -83,6 +90,7 @@ export default function Widget({
       className="widget"
       onMouseOver={() => setShowPicker(true)}
       onMouseLeave={() => setShowPicker(false)}
+      onClick={() => routeTo({ route: "/", focused: "" })}
     >
       <Layer>
         <Align index={index} node={ref}>
