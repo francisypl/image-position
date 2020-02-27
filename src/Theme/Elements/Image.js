@@ -14,11 +14,14 @@ import ImageToolbar from "../../Editor/ImageEditor/Toolbar";
 import Align from "../../Editor/Align";
 import Layer from "../../Editor/Layer";
 import { Slider } from "./Slider";
+import { Text } from "./Text";
+import { Flex } from "./Flex";
 import AppStoreContext, {
   SET_MODAL_ACTION
 } from "../../common/AppStoreContext";
 import RouteStoreContext, {
-  setRouteState
+  setRouteState,
+  setRoute
 } from "../../common/RouteStoreContext";
 import ImagePicker from "../../Editor/ImagePicker";
 import * as routes from "../../constants/routes";
@@ -100,7 +103,20 @@ function getStyles(containerStyle, ...args) {
   }
 }
 
-export function ImageContainer({
+export function ImageContainer({ caption, ...props }) {
+  return (
+    <Flex flexDirection="column">
+      <InnerImage {...props} />
+      {caption && (
+        <Text className="img-caption" fontSize={1}>
+          {caption}
+        </Text>
+      )}
+    </Flex>
+  );
+}
+
+export function InnerImage({
   id,
   containerStyle,
   style,
@@ -126,6 +142,7 @@ export function ImageContainer({
   const { state: routeState, dispatch: routeDisptach } = useContext(
     RouteStoreContext
   );
+  const routeTo = setRouteState(routeState, routeDisptach);
 
   const initPos = useRef();
   const isViewState = editState === EDIT_STATES.view;
@@ -252,11 +269,12 @@ export function ImageContainer({
 
   const handleDelete = function() {
     onChange({ id, img: null });
+    routeTo({ route: "/", field: "" });
   };
 
   const handleNavigate = e => {
     e.stopPropagation();
-    setRouteState(routeState, routeDisptach)({
+    routeTo({
       route: routes.IMAGE,
       focused: id
     });

@@ -31,7 +31,7 @@ export default function About(props) {
             gridTemplateColumns="minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)"
             gridGap="2em"
           >
-            {data.map(({ id, img, containerStyle, pos, scale }, i) => (
+            {data.map(({ id, img, caption, containerStyle, pos, scale }, i) => (
               <Flex key={i} flexDirection="column" justifyContent="flex-start">
                 {img && (
                   <ImageContainer
@@ -40,6 +40,7 @@ export default function About(props) {
                     containerStyle={containerStyle}
                     pos={pos && pos[containerStyle]}
                     scale={scale && scale[containerStyle]}
+                    caption={caption}
                     onChange={setAboutProperty(state, dispatch)}
                   />
                 )}

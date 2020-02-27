@@ -18,7 +18,7 @@ const textString =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et ligula ullamcorper malesuada proin libero nunc.";
 export default function Welcome(props) {
   const { state, dispatch } = useContext(AppStoreContext);
-  const { id, img, containerStyle, pos, scale } = getWelcome(state);
+  const { id, img, containerStyle, pos, scale, caption } = getWelcome(state);
   const hasImage = !!img;
   const columns = hasImage ? "1fr 1fr" : "1fr";
   return (
@@ -29,6 +29,7 @@ export default function Welcome(props) {
             <ImageContainer
               id={id}
               src={img}
+              caption={caption}
               containerStyle={containerStyle}
               pos={pos}
               scale={scale}
